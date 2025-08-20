@@ -34,7 +34,7 @@ body{
 }
 section{
     min-height: 100vh;
-    padding: 10rem 9% 2rem;
+    padding: 10rem 6vw 2rem;
 }
 /* HEADER SECTION STYLE  */
 .header{
@@ -149,6 +149,7 @@ section{
     display: flex;
     justify-content: center;
     align-items: center;
+    gap: 10rem;
 }
 
 .home-content h3{
