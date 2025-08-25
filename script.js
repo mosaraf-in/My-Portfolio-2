@@ -67,60 +67,134 @@ const typed = new Typed('.multiple-text',{
 
 // ===================================== contact me ================================================
 
-const form =document.querySelector('form');
-const fullName =document.querySelector('#name');
-const email =document.querySelector('#email');
-const phone =document.querySelector('#phone');
-const subject =document.querySelector('#subject');
-const mess =document.querySelector('#message');
+// Initialize EmailJS
+emailjs.init("cNq2-Zipj3Y57uMns");
 
-function checkInputs(){
-    const items = document.querySelectorAll('.item');
+const form = document.getElementById('contact-form');
+const submit = document.getElementById("submit");
+const msg = document.getElementById("msg");
 
-    for(const item of items){
-        if (item.value == ""){
-            item.classList.add('error');
-            item.parentElement.classList.add('error');
-        }
-        if (items[1].value != ""){
-            checkEmail();
-        }
-
-        items[1].addEventListener("keyup", () =>{
-            checkEmail();
-        })
-
-        item.addEventListener('keyup', ()=>{
-            if (item.value != ""){
-                item.classList.remove('error');
-                item.parentElement.classList.remove('error');
-            }
-            else{
-                item.classList.add('error');
-                item.parentElement.classList.add('error');
-            }
-        });
-    }
-}
+const fullName = document.querySelector('#name');
+const email = document.querySelector('#email');
+const phone = document.querySelector('#phone');
+const subject = document.querySelector('#subject');
+const mess = document.querySelector('#message');
 
 function checkEmail(){
     const emailRegex = /^([a-z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,3})(\.[a-z]{2,3})?$/;
 
-    if (!email.value.match(emailRegex)){
+    if (email.value.trim() === "") {
         email.classList.add("error");
         email.parentElement.classList.add("error");
-    }else{
+        return false;
+    } else if (!emailRegex.test(email.value.trim())){
+        email.classList.add("error");
+        email.parentElement.classList.add("error");
+        return false;
+    } else {
         email.classList.remove("error");
         email.parentElement.classList.remove("error");
+        return true;
+    }
+}
+
+function checkInputs(){
+    const items = [fullName,email,phone,subject,mess];
+    let isValid = true;
+
+    items.forEach(item =>{
+        if (item.value.trim() === ""){
+            item.classList.add('error');
+            item.parentElement.classList.add('error');
+            isValid = false;
+        } else {
+            item.classList.remove('error');
+            item.parentElement.classList.remove('error');
+        }
+    });
+
+    if (!checkEmail()) isValid = false;
+    return isValid;
+}
+
+async function sendEmailJS(){
+    try {
+        await emailjs.sendForm("service_l9fcpdq", "template_4lscnv4", form);
+
+        msg.className = "success";
+        form.reset();
+
+        // ✅ Popup Message
+        showPopup("✅ Message sent successfully!");
+    } catch (err) {
+        msg.className = "error";
+        msg.textContent = "❌ Failed to send. Please try again.";
+        console.error(err);
+
+        // ❌ Popup Error
+        showPopup("❌ Failed to send. Please try again.");
+    } finally {
+        msg.classList.remove("hidden");
+        submit.disabled = false;
+        submit.textContent = "Send Message";
     }
 }
 
 form.addEventListener("submit", e => {
     e.preventDefault();
-   
-    checkInputs();
-    const isValid = checkInputs();
-    if(isValid){
-        sendEmail();
+
+    // bot check (honeypot filled => ignore)
+    if (form._honey.value) return;
+
+    submit.disabled = true;
+    submit.textContent = "Sending...";
+
+    if (checkInputs()){
+        sendEmailJS();
+    } else {
+        submit.disabled = false;
+        submit.textContent = "Send Message";
     }
 });
+
+// ---------- Real-time Error Handling ----------
+
+// অন্যান্য input ফিল্ড (type করলে error clear হবে)
+[fullName, phone, subject, mess].forEach(item =>{
+    item.addEventListener('keyup', ()=>{
+        if (item.value.trim() !== ""){
+            item.classList.remove('error');
+            item.parentElement.classList.remove('error');
+        }
+    });
+});
+
+// Email ফিল্ড (valid না হওয়া পর্যন্ত error থাকবে)
+email.addEventListener('keyup', ()=>{
+    const emailRegex = /^([a-z\d\.-]+)@([a-z\d-]+)\.([a-z]{2,3})(\.[a-z]{2,3})?$/;
+    if (!emailRegex.test(email.value.trim())){
+        email.classList.add("error");
+        email.parentElement.classList.add("error");
+    } else {
+        email.classList.remove("error");
+        email.parentElement.classList.remove("error");
+    }
+});
+
+// ---------- Popup Function ----------
+function showPopup(message){
+    const popup = document.createElement("div");
+    popup.textContent = message;
+    popup.className = "popup-message"; // সব style CSS থেকে আসবে
+
+    document.body.appendChild(popup);
+
+    // fade in
+    setTimeout(()=>{ popup.classList.add("show"); }, 50);
+
+    // fade out + remove
+    setTimeout(()=>{
+        popup.classList.remove("show");
+        setTimeout(()=> popup.remove(), 400);
+    }, 3000);
+}

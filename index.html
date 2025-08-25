@@ -162,38 +162,43 @@
         <section class="contact" id="contact">
             <h2 class="heading">Contact <span>Me!</span></h2>
 
-            <form action="#">
-                <div class="input-box">
-                    <div class="input-field field">
-                        <input type="text" placeholder="Full Name" id="name" class="item" autocomplete="off">
-                        <div class="error-text">Full Name can`t be blank</div>
-                    </div>
-                    <div class="input-field field">
-                        <input type="email" placeholder="Email Address" id="email" class="item" autocomplete="off">
-                        <div class="error-text">Email Address can`t be blank</div>
-                    </div>
-                </div>
+            <form action="#" id="contact-form">
+    <div class="input-box">
+        <div class="input-field field">
+            <input type="text" placeholder="Full Name" id="name" name="name" class="item" autocomplete="off">
+            <div class="error-text">Full Name can't be blank</div>
+        </div>
+        <div class="input-field field">
+            <input type="email" placeholder="Email Address" id="email" name="email" class="item" autocomplete="off">
+            <div class="error-text">Email Address can't be blank</div>
+        </div>
+    </div>
 
-                <div class="input-box">
-                    <div class="input-field field">
-                        <input type="text" placeholder="Phone Number" id="phone" class="item" autocomplete="off">
-                        <div class="error-text">Phone Number can`t be blank</div>
-                    </div>
-                    <div class="input-field field">
-                        <input type="text" placeholder="Subject" id="subject" class="item" autocomplete="off">
-                        <div class="error-text">Subject can`t be blank</div>
-                    </div>
-                </div>
+    <div class="input-box">
+        <div class="input-field field">
+            <input type="text" placeholder="Phone Number" id="phone" name="phone" class="item" autocomplete="off">
+            <div class="error-text">Phone Number can't be blank</div>
+        </div>
+        <div class="input-field field">
+            <input type="text" placeholder="Subject" id="subject" name="subject" class="item" autocomplete="off">
+            <div class="error-text">Subject can't be blank</div>
+        </div>
+    </div>
 
-                <div class="textarea-field field">
-                    <textarea name="" id="message" cols="30" rows="7"
-                    placeholder="Your Message" class="item" autocomplete="off"></textarea>
-                    <div class="error-text">Message can`t be blank</div>
-                </div>
+    <div class="textarea-field field">
+        <textarea id="message" name="message" cols="30" rows="7"
+        placeholder="Your Message" class="item" autocomplete="off"></textarea>
+        <div class="error-text">Message can't be blank</div>
+    </div>
 
-                <input type="submit" value="Send Message" class="btn">
-        
-            </form>
+    <!-- honeypot anti-spam -->
+    <input type="text" name="_honey" class="hidden" tabindex="-1" autocomplete="off" />
+
+    <button type="submit" id="submit" class="btn">Send Message</button>
+    
+    <!-- message box -->
+    <div id="msg" class="hidden"></div>
+</form>
         </section>
 
         <!-- FOOTER SECTION DESIGN -->
@@ -209,6 +214,9 @@
 
     <script src="https://unpkg.com/scrollreveal"></script> <!-- scroll reveal-->
     <script src="https://unpkg.com/typed.js@2.1.0/dist/typed.umd.js"></script> <!--typed js-->
+
+    <!-- EmailJS browser SDK -->
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
     <script src="script.js"></script>
 </body>
 </html>
